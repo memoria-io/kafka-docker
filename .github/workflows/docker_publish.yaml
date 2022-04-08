@@ -1,0 +1,23 @@
+name: Docker
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: docker build . --tag memoriaio/kafka-docker
+
+      - name: Log into registry
+        run: echo "${{ secrets.docker_password }}" | docker login -u ${{ secrets.docker_username }} --password-stdin
+
+      - name: Push image
+        run: |
+          docker push memoriaio/kafka-docker:latest
