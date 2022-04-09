@@ -19,6 +19,7 @@ jobs:
         run: |
           docker build \
             --tag memoriaio/kafka-docker:${KAFKA_VERSION} \
+            --tag memoriaio/kafka-docker:latest \
             --build-arg KAFKA_VERSION=$KAFKA_VERSION .
 
       - name: Log into registry
