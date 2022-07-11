@@ -11,3 +11,7 @@ RUN echo "Installing ${KAFKA_FILE}"
 RUN curl $KAFKA_URL --output $KAFKA_FILE
 RUN tar -xzf $KAFKA_FILE
 RUN mv $KAFKA_FILE kafka
+ADD main.sh /kafka/main.sh
+RUN chmod +x /kafka/main.sh
+
+CMD ["bash", "./kafka/main.sh"]
