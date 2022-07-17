@@ -6,7 +6,7 @@ on:
 
 env:
   IMAGE_VERSION: 2022.07.17.01
-  KAFKA_VERSION: 2.3.0
+  KAFKA_VERSION: 3.2.0
   
 jobs:
   push:
