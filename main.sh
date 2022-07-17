@@ -46,5 +46,5 @@ echo "---------------------------------"
 #--------------------------------------------------------------------------------------
 # Running kafka
 #--------------------------------------------------------------------------------------
-#./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${SERVER_CONFIG_FILE}
-#./kafka/bin/kafka-server-start.sh ${SERVER_CONFIG_FILE}
+./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${SERVER_CONFIG_FILE}
+./kafka/bin/kafka-server-start.sh ${SERVER_CONFIG_FILE}
