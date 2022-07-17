@@ -5,7 +5,8 @@ on:
     branches: [ master ]
 
 env:
-  KAFKA_VERSION: 2022.07.17.01
+  IMAGE_VERSION: 2022.07.17.01
+  KAFKA_VERSION: 2.3.0
   
 jobs:
   push:
@@ -18,7 +19,7 @@ jobs:
       - name: Build image
         run: |
           docker build \
-            --tag memoriaio/kafka-docker:${KAFKA_VERSION} \
+            --tag memoriaio/kafka-docker:${IMAGE_VERSION} \
             --tag memoriaio/kafka-docker:latest \
             --build-arg KAFKA_VERSION=$KAFKA_VERSION .
 
@@ -27,5 +28,5 @@ jobs:
 
       - name: Push image
         run: |
-          docker push memoriaio/kafka-docker:${KAFKA_VERSION}
+          docker push memoriaio/kafka-docker:${IMAGE_VERSION}
           docker push memoriaio/kafka-docker:latest
