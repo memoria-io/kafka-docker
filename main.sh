@@ -1,4 +1,5 @@
 #!/bin/bash
+
 SERVER_CONFIG_FILE=/kafka/config.properties
 PREFIX=KAFKA_CONFIG_
 set +x
@@ -30,6 +31,13 @@ echo "---------------------------------"
 cat $SERVER_CONFIG_FILE
 echo "---------------------------------"
 
-export KAFKA_NODE_UUID=$(./kafka/bin/kafka-storage.sh random-uuid)
-./kafka/bin/kafka-storage.sh format -t ${KAFKA_NODE_UUID} -c ${SERVER_CONFIG_FILE}
+#export KAFKA_CLUSTER_UUID=$(./kafka/bin/kafka-storage.sh random-uuid)
+
+if [ -z "${KAFKA_CLUSTER_UUID}" ];
+then
+  echo "KAFKA_CLUSTER_UUID was not set using arbitrary uuid: A0acq9cPQwymi60FufxF7g"
+  export KAFKA_CLUSTER_UUID=A0acq9cPQwymi60FufxF7g
+fi
+
+./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${SERVER_CONFIG_FILE}
 ./kafka/bin/kafka-server-start.sh ${SERVER_CONFIG_FILE}
