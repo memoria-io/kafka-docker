@@ -4,7 +4,10 @@ PREFIX=KAFKA_CONFIG_
 set +x
 set -e
 
-nodeId=${hostname#*-}
+host_name=$(hostname)
+# e.g kafka-12 becomes: 12
+nodeId=${host_name##*-}
+
 if [ -z "${nodeId}" ];
 then
   export KAFKA_CONFIG_node_id="0"

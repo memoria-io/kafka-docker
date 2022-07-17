@@ -5,8 +5,8 @@
 docker build --build-arg KAFKA_VERSION=3.2.0 -t local/kafka:3.2.0 .
 ```
 
-## To run
+## To run with defaults, and node.id=0
 
 ```bash
-docker run -it --env-file default_env local/kafka:3.2.0 bash
+docker run -it --env-file default_env --hostname kafka-0 local/kafka:3.2.0
 ```
