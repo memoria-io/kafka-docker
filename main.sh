@@ -1,50 +1,55 @@
 #!/bin/bash
 set -e
 
-SERVER_CONFIG_FILE=/kafka/config.properties
-PREFIX=KAFKA_CONFIG_
+set -x
+KAFKA_CLUSTER_UUID=${KAFKA_CLUSTER_UUID:-DEFUALT00000000000UUID}
+DEFAULT_CONFIG=/kafka/default.properties
+CONTROLLER_CONFIG=${CONTROLLER_CONFIG:-/kafka/config/kraft/controller.properties}
+BROKER_CONFIG=${BROKER_CONFIG:-/kafka/config/kraft/broker.properties}
+set +x
+
+run_default() {
+  echo "CONTROLLERS_COUNT is not set, using default.properties configurations"
+  ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${DEFAULT_CONFIG}
+  ./kafka/bin/kafka-server-start.sh ${DEFAULT_CONFIG}
+}
+
+run_with_count() {
+  echo "CONTROLLERS_COUNT=${CONTROLLERS_COUNT}"
+  node_id=$(host_count)
+  echo "node.id=$node_id"
+  if (($node_id < ${CONTROLLERS_COUNT})); then
+    echo "controller"
+    config_file=$CONTROLLER_CONFIG
+  else
+    echo "broker"
+    config_file=$BROKER_CONFIG
+  fi
+  echo "node.id=${node_id}" >>$config_file
+  ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${config_file}
+  ./kafka/bin/kafka-server-start.sh ${config_file}
+}
+
+host_count() {
+  config_file=$1
+  host_name=$(hostname)
+
+  # e.g kafka-12 becomes: 12
+  default_node_id=${host_name##*-}
+
+  if [ -z "${default_node_id}" ] || [ -z "${default_node_id##*[!0-9]*}" ]; then
+    default_node_id=0
+  fi
+
+  echo "${NODE_ID:-$default_node_id}"
+}
 
 #--------------------------------------------------------------------------------------
-# Setting Kafka node.id
+# Run
 #--------------------------------------------------------------------------------------
-host_name=$(hostname)
-# e.g kafka-12 becomes: 12
-default_node_id=${host_name##*-}
 
-if [ -z "${default_node_id}" ] || [ -z "${default_node_id##*[!0-9]*}" ];
-then
-  default_node_id=0
+if [ -z "${CONTROLLERS_COUNT}" ]; then
+  run_default
+else
+  run_with_count
 fi
-
-export KAFKA_CONFIG_node_id="${KAFKA_CONFIG_node_id:-$default_node_id}"
-
-#--------------------------------------------------------------------------------------
-# Creating configuration file
-#--------------------------------------------------------------------------------------
-echo "#-----------------------------------" > $SERVER_CONFIG_FILE
-echo "# Generated Kafka Configuration     " >> $SERVER_CONFIG_FILE
-echo "#-----------------------------------" >> $SERVER_CONFIG_FILE
-env | grep "^${PREFIX}" | \
- awk -F $PREFIX '{print $2}' | \
- sed -e ':b; s/^\([^=]*\)*__/\1\##/; tb;' | \
- sed -e ':b; s/^\([^=]*\)*_/\1\./; tb;' | \
- sed -e ':b; s/^\([^=]*\)*##/\1\_/; tb;' >> $SERVER_CONFIG_FILE
-
-cat $SERVER_CONFIG_FILE
-echo "---------------------------------"
-
-#--------------------------------------------------------------------------------------
-# Setting kafka cluster UUID
-#--------------------------------------------------------------------------------------
-if [ -z "${KAFKA_CLUSTER_UUID}" ];
-then
-  echo "KAFKA_CLUSTER_UUID was not set, using arbitrary default uuid: A0acq9cPQwymi60FufxF7g"
-  export KAFKA_CLUSTER_UUID=A0acq9cPQwymi60FufxF7g
-fi
-echo "---------------------------------"
-
-#--------------------------------------------------------------------------------------
-# Running kafka
-#--------------------------------------------------------------------------------------
-./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${SERVER_CONFIG_FILE}
-./kafka/bin/kafka-server-start.sh ${SERVER_CONFIG_FILE}

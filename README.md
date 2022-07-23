@@ -7,7 +7,7 @@ The default configs runs in kraft mode (no zookeeper mode), yet it can be used w
 * To run directly from docker-hub
 
 ```bash
-docker run -it --env-file default_env --hostname kafka-0 memoriaio/kafka-docker:3.2.0
+docker run -it --hostname kafka-0 memoriaio/kafka-docker:3.2.0
 ```
 
 * To build and run locally
@@ -19,7 +19,16 @@ docker build --build-arg KAFKA_VERSION=3.2.0 -t local/kafka:3.2.0 .
 * To run with defaults, and node.id=0
 
 ```bash
-docker run -it --env-file default_env --hostname kafka-0 local/kafka:3.2.0
+docker run -it --hostname kafka-0 local/kafka:3.2.0
+```
+
+* To run with controller/broker config
+```bash
+docker run -it -e CONTROLLERS_COUNT=3 \
+  -e CONTROLLER_CONFIG=/some_path/controller.properties \
+  -e BROKER_CONFIG=/some_path/broker.properties \
+  --hostname kafka-0 \
+  local/kafka:3.2.0
 ```
 
 ## Configuration notes
