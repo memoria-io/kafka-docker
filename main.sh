@@ -5,7 +5,7 @@ set -x
 KAFKA_CLUSTER_UUID=${KAFKA_CLUSTER_UUID:-DEFUALT00000000000UUID}
 CONTROLLER_CONFIG=${CONTROLLER_CONFIG:-/kafka/config/kraft/controller.properties}
 BROKER_CONFIG=${BROKER_CONFIG:-/kafka/config/kraft/broker.properties}
-FINAL_CONFIG=${BROKER_CONFIG:-/kafka/config/kraft/final_config.properties}
+FINAL_CONFIG=${FINAL_CONFIG:-/kafka/config/kraft/final_config.properties}
 set +x
 
 run_default() {
@@ -26,9 +26,12 @@ run_with_count() {
     echo "Running kafka container as a broker"
     config_file=$BROKER_CONFIG
   fi
+  set -x
   echo "node.id=${node_id}" > $FINAL_CONFIG
   cat $config_file >> $FINAL_CONFIG
+  echo "Formatting storage"
   ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${FINAL_CONFIG}
+  echo "Running kafka server"
   ./kafka/bin/kafka-server-start.sh ${FINAL_CONFIG}
 }
 
