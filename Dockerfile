@@ -14,6 +14,6 @@ RUN mv $KAFKA_FILE kafka
 ADD main.sh /kafka/main.sh
 RUN chmod +x /kafka/main.sh
 
-ADD default.properties /kafka/
+ADD default.properties /kafka/config/kraft/default.properties
 
 CMD ["bash", "./kafka/main.sh"]

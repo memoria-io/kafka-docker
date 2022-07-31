@@ -5,66 +5,45 @@ set -x
 KAFKA_CLUSTER_UUID=${KAFKA_CLUSTER_UUID:-DEFUALT00000000000UUID}
 CONTROLLER_CONFIG=${CONTROLLER_CONFIG:-/kafka/config/kraft/controller.properties}
 BROKER_CONFIG=${BROKER_CONFIG:-/kafka/config/kraft/broker.properties}
-FINAL_CONFIG=${FINAL_CONFIG:-/kafka/config/kraft/final_config.properties}
-
-
+DEFAULT_CONFIG=/kafka/config/kraft/default.properties
+GENERATED_CONFIG=/kafka/config/kraft/generated.properties
 set +x
 
-run_default() {
-  echo "CONTROLLERS_COUNT is not set, using default.properties configurations"
-  export NODE_ID=$(host_count)
-
-  DEFAULT_CONFIG=/kafka/default.properties
-  FINAL_DEFAULT_CONFIG=/kafka/final-default.properties
-  envsubst < $DEFAULT_CONFIG > $FINAL_DEFAULT_CONFIG
-
-  ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${FINAL_DEFAULT_CONFIG}
-
-  echo "Running kafka with configurations in: $FINAL_DEFAULT_CONFIG"
-  cat $FINAL_DEFAULT_CONFIG
-  ./kafka/bin/kafka-server-start.sh ${FINAL_DEFAULT_CONFIG}
-}
-
-run_with_count() {
-  echo "CONTROLLERS_COUNT=${CONTROLLERS_COUNT}"
-  export NODE_ID=$(host_count)
-  if (($NODE_ID < ${CONTROLLERS_COUNT})); then
-    echo "Running kafka container as a controller"
-    config_file=$CONTROLLER_CONFIG
+get_config_src() {
+  if [ -z "${CONTROLLERS_COUNT}" ]; then
+    echo $DEFAULT_CONFIG
   else
-    echo "Running kafka container as a broker"
-    config_file=$BROKER_CONFIG
+    if (($NODE_ID < ${CONTROLLERS_COUNT})); then
+      echo $CONTROLLER_CONFIG
+    else
+      echo $BROKER_CONFIG
+    fi
   fi
-  envsubst < $config_file > $FINAL_CONFIG
-
-
-  ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${FINAL_CONFIG}
-
-  echo "Running kafka with configurations in: $FINAL_CONFIG"
-  cat $FINAL_CONFIG
-  ./kafka/bin/kafka-server-start.sh ${FINAL_CONFIG}
 }
 
-host_count() {
-  config_file=$1
+extract_id() {
   host_name=$(hostname)
-
   # e.g kafka-12 becomes: 12
   default_node_id=${host_name##*-}
-
   if [ -z "${default_node_id}" ] || [ -z "${default_node_id##*[!0-9]*}" ]; then
     default_node_id=0
   fi
-
   echo "${NODE_ID:-$default_node_id}"
 }
 
 #--------------------------------------------------------------------------------------
+# Generate Configurations
+#--------------------------------------------------------------------------------------
+export NODE_ID=$(extract_id)
+
+echo "#------------------------" > $GENERATED_CONFIG
+echo "# Generated Configuration" >> $GENERATED_CONFIG
+echo "#------------------------" >> $GENERATED_CONFIG
+envsubst < $(get_config_src) >> $GENERATED_CONFIG
+cat $GENERATED_CONFIG
+
+#--------------------------------------------------------------------------------------
 # Run
 #--------------------------------------------------------------------------------------
-
-if [ -z "${CONTROLLERS_COUNT}" ]; then
-  run_default
-else
-  run_with_count
-fi
+./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${GENERATED_CONFIG}
+./kafka/bin/kafka-server-start.sh ${GENERATED_CONFIG}
