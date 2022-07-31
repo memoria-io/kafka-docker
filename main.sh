@@ -3,12 +3,13 @@ set -e
 
 set -x
 KAFKA_CLUSTER_UUID=${KAFKA_CLUSTER_UUID:-DEFUALT00000000000UUID}
-DEFAULT_CONFIG=/kafka/default.properties
 CONTROLLER_CONFIG=${CONTROLLER_CONFIG:-/kafka/config/kraft/controller.properties}
 BROKER_CONFIG=${BROKER_CONFIG:-/kafka/config/kraft/broker.properties}
+FINAL_CONFIG=${BROKER_CONFIG:-/kafka/config/kraft/final_config.properties}
 set +x
 
 run_default() {
+  DEFAULT_CONFIG=/kafka/default.properties
   echo "CONTROLLERS_COUNT is not set, using default.properties configurations"
   ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${DEFAULT_CONFIG}
   ./kafka/bin/kafka-server-start.sh ${DEFAULT_CONFIG}
@@ -25,9 +26,10 @@ run_with_count() {
     echo "Running kafka container as a broker"
     config_file=$BROKER_CONFIG
   fi
-  echo "node.id=${node_id}" >>$config_file
-  ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${config_file}
-  ./kafka/bin/kafka-server-start.sh ${config_file}
+  echo "node.id=${node_id}" > $FINAL_CONFIG
+  cat $config_file >> $FINAL_CONFIG
+  ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${FINAL_CONFIG}
+  ./kafka/bin/kafka-server-start.sh ${FINAL_CONFIG}
 }
 
 host_count() {
