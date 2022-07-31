@@ -28,7 +28,6 @@ run_with_count() {
   fi
   echo "node.id=${node_id}" > $FINAL_CONFIG
   cat $config_file >> $FINAL_CONFIG
-  echo "Formatting storage"
   ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${FINAL_CONFIG}
   echo "Running kafka server"
   ./kafka/bin/kafka-server-start.sh ${FINAL_CONFIG}
