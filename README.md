@@ -15,14 +15,14 @@ docker run -it --hostname kafka-0 memoriaio/kafka-docker:3.2.0
 
 ### Required Configuration
 
-* `CONTROLLERS_COUNT` set to bigger than 0, required and has no default value
+* `NUMBER_OF_CONTROLLERS` set to bigger than 0, required and has no default value
 * `CONTROLLER_CONFIG` has default value `/kafka/config/kraft/controller.properties`
 * `BROKER_CONFIG` has default value `/kafka/config/kraft/broker.properties`
 * Setting `--hostname "whatever_name-${id}` where `${id}` becomes the kafka `node.id` using `node.id=$(extract_id)`
 
 Example:
 
-If `CONTROLLERS_COUNT=3` then containers with hostnames `my-kafkatt-0`, `hello-kafkaaa-1`, `hi-kafka-2` will run
+If `NUMBER_OF_CONTROLLERS=3` then containers with hostnames `my-kafkatt-0`, `hello-kafkaaa-1`, `hi-kafka-2` will run
 using `CONTROLLER_CONFIG` while `my-kafkaaaa-3`, `any-kafkabbb-4` , `my-kafkass-...` will run using the `BROKER_CONFIG`.
 
 ### Optional configuration
@@ -38,10 +38,10 @@ export KAFKA_CLUSTER_UUID=$(./kafka/bin/kafka-storage.sh random-uuid)
 ```bash
 id=0 # where id can be 0,1,2,...
 
-docker run -it -e CONTROLLERS_COUNT=3 \
+docker run -it -e NUMBER_OF_CONTROLLERS=3 \
   -e CONTROLLER_CONFIG=/some_path/controller.properties \
   -e BROKER_CONFIG=/some_path/broker.properties \
-  -e CONTROLLERS_COUNT=3 \
+  -e NUMBER_OF_CONTROLLERS=3 \
   -v some_path:some_path \
   --hostname "kafka-${id}" \
   local/kafka:3.2.0

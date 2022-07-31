@@ -10,10 +10,10 @@ GENERATED_CONFIG=/kafka/config/kraft/generated.properties
 set +x
 
 get_config_src() {
-  if [ -z "${CONTROLLERS_COUNT}" ]; then
+  if [ -z "${NUMBER_OF_CONTROLLERS}" ]; then
     echo $DEFAULT_CONFIG
   else
-    if (($NODE_ID < ${CONTROLLERS_COUNT})); then
+    if (($NODE_ID < ${NUMBER_OF_CONTROLLERS})); then
       echo $CONTROLLER_CONFIG
     else
       echo $BROKER_CONFIG
