@@ -1,4 +1,4 @@
-FROM memoriaio/java-docker:2022.07.17.02
+FROM memoriaio/java-docker:2022.07.31.01
 
 MAINTAINER Ismail Marmoush<marmoushismail@gmail.com>
 
