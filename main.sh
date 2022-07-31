@@ -19,10 +19,10 @@ run_with_count() {
   node_id=$(host_count)
   echo "node.id=$node_id"
   if (($node_id < ${CONTROLLERS_COUNT})); then
-    echo "controller"
+    echo "Running kafka container as a controller"
     config_file=$CONTROLLER_CONFIG
   else
-    echo "broker"
+    echo "Running kafka container as a broker"
     config_file=$BROKER_CONFIG
   fi
   echo "node.id=${node_id}" >>$config_file
