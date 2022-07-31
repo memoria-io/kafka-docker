@@ -40,10 +40,11 @@ echo "#------------------------" > $GENERATED_CONFIG
 echo "# Generated Configuration" >> $GENERATED_CONFIG
 echo "#------------------------" >> $GENERATED_CONFIG
 envsubst < $(get_config_src) >> $GENERATED_CONFIG
+printf "\n" >> $GENERATED_CONFIG
+echo "#------------------------" >> $GENERATED_CONFIG
 cat $GENERATED_CONFIG
-
 #--------------------------------------------------------------------------------------
 # Run
 #--------------------------------------------------------------------------------------
-./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${GENERATED_CONFIG}
+./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${GENERATED_CONFIG} --ignore-formatted
 ./kafka/bin/kafka-server-start.sh ${GENERATED_CONFIG}
