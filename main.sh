@@ -26,7 +26,6 @@ run_with_count() {
     echo "Running kafka container as a broker"
     config_file=$BROKER_CONFIG
   fi
-  set -x
   echo "node.id=${node_id}" > $FINAL_CONFIG
   cat $config_file >> $FINAL_CONFIG
   echo "Formatting storage"
