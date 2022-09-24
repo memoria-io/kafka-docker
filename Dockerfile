@@ -2,7 +2,7 @@ FROM memoriaio/java-docker:2022.19.0
 
 MAINTAINER Ismail Marmoush<marmoushismail@gmail.com>
 
-ARG KAFKA_VERSION
+ENV KAFKA_VERSION=3.2.3
 ENV KAFKA_FILE="kafka_2.13-${KAFKA_VERSION}"
 ENV KAFKA_URL="https://dlcdn.apache.org/kafka/${KAFKA_VERSION}/${KAFKA_FILE}.tgz"
 

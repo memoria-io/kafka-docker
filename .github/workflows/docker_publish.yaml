@@ -6,7 +6,6 @@ on:
 
 env:
   IMAGE_VERSION: 2022.19.0
-  KAFKA_VERSION: 3.2.0
   
 jobs:
   push:
@@ -20,8 +19,7 @@ jobs:
         run: |
           docker build \
             --tag memoriaio/kafka-docker:${IMAGE_VERSION} \
-            --tag memoriaio/kafka-docker:latest \
-            --build-arg KAFKA_VERSION=$KAFKA_VERSION .
+            --tag memoriaio/kafka-docker:latest .
 
       - name: Log into registry
         run: echo "${{ secrets.docker_password }}" | docker login -u ${{ secrets.docker_username }} --password-stdin
