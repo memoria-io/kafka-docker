@@ -41,7 +41,6 @@ id=0 # where id can be 0,1,2,...
 docker run -it -e NUMBER_OF_CONTROLLERS=3 \
   -e CONTROLLER_CONFIG=/some_path/controller.properties \
   -e BROKER_CONFIG=/some_path/broker.properties \
-  -e NUMBER_OF_CONTROLLERS=3 \
   -v some_path:some_path \
   --hostname "kafka-${id}" \
   local/kafka:3.2.0

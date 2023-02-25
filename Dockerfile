@@ -16,4 +16,4 @@ RUN chmod +x /kafka/main.sh
 
 ADD default.properties /kafka/config/kraft/default.properties
 
-CMD ["bash", "./kafka/main.sh"]
+CMD ["bash","-c", "source ./kafka/main.sh; ./kafka/main.sh generate; ./kafka/main.sh run"]

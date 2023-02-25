@@ -32,19 +32,30 @@ extract_id() {
 }
 
 #--------------------------------------------------------------------------------------
-# Generate Configurations
+# Export vars
 #--------------------------------------------------------------------------------------
+echo "export NODE_ID=$NODE_ID"
 export NODE_ID=$(extract_id)
 
-echo "#------------------------" > $GENERATED_CONFIG
-echo "# Generated Configuration" >> $GENERATED_CONFIG
-echo "#------------------------" >> $GENERATED_CONFIG
-envsubst < $(get_config_src) >> $GENERATED_CONFIG
-printf "\n" >> $GENERATED_CONFIG
-echo "#------------------------" >> $GENERATED_CONFIG
-cat $GENERATED_CONFIG
 #--------------------------------------------------------------------------------------
-# Run
+# Generate configuration files
 #--------------------------------------------------------------------------------------
-./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${GENERATED_CONFIG} --ignore-formatted
-./kafka/bin/kafka-server-start.sh ${GENERATED_CONFIG}
+generate(){
+  echo "#------------------------" > $GENERATED_CONFIG
+  echo "# Generated Configuration" >> $GENERATED_CONFIG
+  echo "#------------------------" >> $GENERATED_CONFIG
+  envsubst < "$(get_config_src)" >> $GENERATED_CONFIG
+  printf "\n" >> $GENERATED_CONFIG
+  echo "#------------------------" >> $GENERATED_CONFIG
+  cat $GENERATED_CONFIG
+}
+
+#--------------------------------------------------------------------------------------
+# Run kafka
+#--------------------------------------------------------------------------------------
+run(){
+  ./kafka/bin/kafka-storage.sh format -t ${KAFKA_CLUSTER_UUID} -c ${GENERATED_CONFIG} --ignore-formatted
+  ./kafka/bin/kafka-server-start.sh ${GENERATED_CONFIG}
+}
+
+"$@"
