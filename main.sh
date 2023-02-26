@@ -3,15 +3,15 @@ set -e
 
 set -x
 KAFKA_CLUSTER_UUID=${KAFKA_CLUSTER_UUID:-DEFUALT00000000000UUID}
-CONTROLLER_CONFIG=${CONTROLLER_CONFIG:-/kafka/config/kraft/controller.properties}
-BROKER_CONFIG=${BROKER_CONFIG:-/kafka/config/kraft/broker.properties}
-DEFAULT_CONFIG=/kafka/config/kraft/default.properties
-GENERATED_CONFIG=/kafka/config/kraft/generated.properties
+CONTROLLER_CONFIG=${CONTROLLER_CONFIG:-/kafka_config/controller.properties}
+BROKER_CONFIG=${BROKER_CONFIG:-/kafka_config/broker.properties}
+SINGLETON_CONFIG=/kafka_config/singleton.properties
+GENERATED_CONFIG=/kafka.properties
 set +x
 
 get_config_src() {
   if [ -z "${NUMBER_OF_CONTROLLERS}" ]; then
-    echo $DEFAULT_CONFIG
+    echo $SINGLETON_CONFIG
   else
     if (($NODE_ID < ${NUMBER_OF_CONTROLLERS})); then
       echo $CONTROLLER_CONFIG

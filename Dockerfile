@@ -11,9 +11,9 @@ RUN curl $KAFKA_URL --output $KAFKA_FILE
 RUN tar -xzf $KAFKA_FILE
 RUN mv $KAFKA_FILE kafka
 
-ADD main.sh /kafka/main.sh
-RUN chmod +x /kafka/main.sh
+ADD main.sh /main.sh
+RUN chmod +x /main.sh
 
-ADD default.properties /kafka/config/kraft/default.properties
+ADD kafka_config/singleton.properties /kafka_config/singleton.properties
 
-CMD ["bash","-c", "source ./kafka/main.sh; ./kafka/main.sh generate; ./kafka/main.sh run"]
+CMD ["bash","-c", "source ./main.sh && ./main.sh generate && ./main.sh run"]

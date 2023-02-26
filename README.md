@@ -51,7 +51,7 @@ docker run -it -e NUMBER_OF_CONTROLLERS=3 \
 The main script uses gnu gettext `envsubst < $(get_config_src) > $GENERATED_CONFIG` to generate the final configuration
 file, this does environment variable substitution.
 
-One example is already used with the `default.properties` file  `node.id=${NODE_ID}`, which evaluates NODE_ID from the
+One example is already used with the `sample_singleton.properties` file  `node.id=${NODE_ID}`, which evaluates NODE_ID from the
 environment and the output is written to `generated.properties`
 
 ## 5.0 Build from source
