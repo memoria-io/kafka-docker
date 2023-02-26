@@ -1,19 +1,14 @@
 version: '3.8'
 services:
-  kafka-0:
-    image: 'memoriaio/kafka-docker:19.0.3'
-    environment:
-      - NODE_ID=0
-      - CONFIG_TMPL=/default_tmpl/controller.properties
-      - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
-      - ADVERTISED_LISTENERS=INTERNAL://kafka-0:9092
-      - LOGS_DIR=/kafka_logs
+  #------------------------------------------------------------------------------------------
+  # Controllers
+  #------------------------------------------------------------------------------------------
   kafka-1:
     image: 'memoriaio/kafka-docker:19.0.3'
     environment:
       - NODE_ID=1
       - CONFIG_TMPL=/default_tmpl/controller.properties
-      - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
+      - QUORUM_CONTROLLERS=1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
       - ADVERTISED_LISTENERS=INTERNAL://kafka-1:9092
       - LOGS_DIR=/kafka_logs
   kafka-2:
@@ -21,30 +16,55 @@ services:
     environment:
       - NODE_ID=2
       - CONFIG_TMPL=/default_tmpl/controller.properties
-      - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
+      - QUORUM_CONTROLLERS=1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
       - ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092
       - LOGS_DIR=/kafka_logs
-  kafka-broker-0:
+  kafka-3:
     image: 'memoriaio/kafka-docker:19.0.3'
     environment:
       - NODE_ID=3
-      - CONFIG_TMPL=/default_tmpl/broker.properties
-      - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
-      - ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092
+      - CONFIG_TMPL=/default_tmpl/controller.properties
+      - QUORUM_CONTROLLERS=1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      - ADVERTISED_LISTENERS=INTERNAL://kafka-3:9092
       - LOGS_DIR=/kafka_logs
-  kafka-broker-1:
+
+  #------------------------------------------------------------------------------------------
+  # Brokers
+  #------------------------------------------------------------------------------------------
+  kafka-broker-4:
     image: 'memoriaio/kafka-docker:19.0.3'
     environment:
       - NODE_ID=4
       - CONFIG_TMPL=/default_tmpl/broker.properties
-      - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
-      - ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092
+      - QUORUM_CONTROLLERS=1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      - ADVERTISED_LISTENERS=INTERNAL://kafka-broker-4:9092
       - LOGS_DIR=/kafka_logs
-  kafka-broker-3:
+  kafka-broker-5:
     image: 'memoriaio/kafka-docker:19.0.3'
     environment:
       - NODE_ID=5
       - CONFIG_TMPL=/default_tmpl/broker.properties
-      - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
-      - ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092
+      - QUORUM_CONTROLLERS=1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      - ADVERTISED_LISTENERS=INTERNAL://kafka-broker-5:9092
       - LOGS_DIR=/kafka_logs
+  kafka-broker-6:
+    image: 'memoriaio/kafka-docker:19.0.3'
+    environment:
+      - NODE_ID=6
+      - CONFIG_TMPL=/default_tmpl/broker.properties
+      - QUORUM_CONTROLLERS=1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      - ADVERTISED_LISTENERS=INTERNAL://kafka-broker-6:9092
+      - LOGS_DIR=/kafka_logs
+
+  kafdrop:
+    image: "obsidiandynamics/kafdrop:3.30.0"
+    ports:
+      - "9090:9090"
+    environment:
+      - SERVER_PORT=9090
+      - BROKER_PORT=9092
+      - KAFKA_BROKERCONNECT=kafka-broker-4:9092,kafka-broker-5:9092,kafka-broker-6:9092
+    depends_on:
+      - kafka-broker-4
+      - kafka-broker-5
+      - kafka-broker-6

@@ -5,12 +5,10 @@ set -x
 KAFKA_CLUSTER_UUID=${KAFKA_CLUSTER_UUID:-DEFUALT00000000000UUID}
 
 # Config source
-CONFIG_TMPL=${CONFIG_TMPL}
+CONFIG_TMPL=${CONFIG_TMPL:-/default_tmpl/singleton.properties}
 
 # Generated config
 CONFIG=/kafka.properties
-
-set +x
 
 #--------------------------------------------------------------------------------------
 # Generate configuration files
@@ -18,7 +16,7 @@ set +x
 echo "#------------------------" > $CONFIG
 echo "# Generated Configuration" >> $CONFIG
 echo "#------------------------" >> $CONFIG
-envsubst < "$(cat $CONFIG_TMPL)" >> $CONFIG
+envsubst < "$CONFIG_TMPL"  >> $CONFIG
 printf "\n" >> $CONFIG
 echo "#------------------------" >> $CONFIG
 cat $CONFIG

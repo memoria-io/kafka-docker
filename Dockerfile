@@ -16,4 +16,4 @@ RUN chmod +x /main.sh
 
 ADD default_tmpl/ /default_tmpl/
 
-CMD ["bash","-c", "./main.sh"]
+CMD ["bash", "./main.sh"]
