@@ -3,9 +3,9 @@ set -e
 
 set -x
 KAFKA_CLUSTER_UUID=${KAFKA_CLUSTER_UUID:-DEFUALT00000000000UUID}
-CONTROLLER_CONFIG=${CONTROLLER_CONFIG:-/config_tmpl/controller.properties}
-BROKER_CONFIG=${BROKER_CONFIG:-/config_tmpl/broker.properties}
-SINGLETON_CONFIG=/config_tmpl/singleton.properties
+CONTROLLER_CONFIG=${CONTROLLER_CONFIG:-/default_tmpl/controller.properties}
+BROKER_CONFIG=${BROKER_CONFIG:-/default_tmpl/broker.properties}
+SINGLETON_CONFIG=/default_tmpl/singleton.properties
 GENERATED_CONFIG=/kafka.properties
 set +x
 

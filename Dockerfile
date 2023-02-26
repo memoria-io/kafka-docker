@@ -14,6 +14,6 @@ RUN mv $KAFKA_FILE kafka
 ADD main.sh /main.sh
 RUN chmod +x /main.sh
 
-ADD config_tmpl/ /config_tmpl/
+ADD default_tmpl/ /default_tmpl/
 
 CMD ["bash","-c", "source ./main.sh && ./main.sh generate && ./main.sh run"]
