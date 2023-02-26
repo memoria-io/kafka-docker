@@ -2,26 +2,49 @@ version: '3.8'
 services:
   kafka-0:
     image: 'memoriaio/kafka-docker:19.0.3'
-    hostname: kafka-0
     environment:
-      - NUMBER_OF_CONTROLLERS=3
+      - NODE_ID=0
+      - CONFIG_TMPL=/default_tmpl/controller.properties
       - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
       - ADVERTISED_LISTENERS=INTERNAL://kafka-0:9092
       - LOGS_DIR=/kafka_logs
   kafka-1:
     image: 'memoriaio/kafka-docker:19.0.3'
-    hostname: kafka-1
     environment:
-      - NUMBER_OF_CONTROLLERS=3
+      - NODE_ID=1
+      - CONFIG_TMPL=/default_tmpl/controller.properties
       - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
       - ADVERTISED_LISTENERS=INTERNAL://kafka-1:9092
       - LOGS_DIR=/kafka_logs
   kafka-2:
     image: 'memoriaio/kafka-docker:19.0.3'
-    hostname: kafka-2
     environment:
-      - NUMBER_OF_CONTROLLERS=3
+      - NODE_ID=2
+      - CONFIG_TMPL=/default_tmpl/controller.properties
       - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
       - ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092
       - LOGS_DIR=/kafka_logs
-
+  kafka-broker-0:
+    image: 'memoriaio/kafka-docker:19.0.3'
+    environment:
+      - NODE_ID=3
+      - CONFIG_TMPL=/default_tmpl/broker.properties
+      - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
+      - ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092
+      - LOGS_DIR=/kafka_logs
+  kafka-broker-1:
+    image: 'memoriaio/kafka-docker:19.0.3'
+    environment:
+      - NODE_ID=4
+      - CONFIG_TMPL=/default_tmpl/broker.properties
+      - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
+      - ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092
+      - LOGS_DIR=/kafka_logs
+  kafka-broker-3:
+    image: 'memoriaio/kafka-docker:19.0.3'
+    environment:
+      - NODE_ID=5
+      - CONFIG_TMPL=/default_tmpl/broker.properties
+      - QUORUM_CONTROLLERS=0@kafka-0:9093,1@kafka-1:9093,2@kafka-2:9093
+      - ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092
+      - LOGS_DIR=/kafka_logs
