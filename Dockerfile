@@ -1,4 +1,4 @@
-FROM memoriaio/java-docker:20.0.1
+FROM memoriaio/java-docker:20.0.0
 
 MAINTAINER Ismail Marmoush<marmoushismail@gmail.com>
 
