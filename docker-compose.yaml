@@ -4,7 +4,7 @@ services:
   # Controllers
   #------------------------------------------------------------------------------------------
   kafka-1:
-    image: 'memoriaio/kafka-docker:19.0.3'
+    image: 'memoriaio/kafka-docker:20.0.0'
     environment:
       - NODE_ID=1
       - CONFIG_TMPL=/default_tmpl/controller.properties
@@ -12,7 +12,7 @@ services:
       - ADVERTISED_LISTENERS=INTERNAL://kafka-1:9092
       - LOGS_DIR=/kafka_logs
   kafka-2:
-    image: 'memoriaio/kafka-docker:19.0.3'
+    image: 'memoriaio/kafka-docker:20.0.0'
     environment:
       - NODE_ID=2
       - CONFIG_TMPL=/default_tmpl/controller.properties
@@ -20,7 +20,7 @@ services:
       - ADVERTISED_LISTENERS=INTERNAL://kafka-2:9092
       - LOGS_DIR=/kafka_logs
   kafka-3:
-    image: 'memoriaio/kafka-docker:19.0.3'
+    image: 'memoriaio/kafka-docker:20.0.0'
     environment:
       - NODE_ID=3
       - CONFIG_TMPL=/default_tmpl/controller.properties
@@ -32,7 +32,7 @@ services:
   # Brokers
   #------------------------------------------------------------------------------------------
   kafka-broker-4:
-    image: 'memoriaio/kafka-docker:19.0.3'
+    image: 'memoriaio/kafka-docker:20.0.0'
     environment:
       - NODE_ID=4
       - CONFIG_TMPL=/default_tmpl/broker.properties
@@ -40,7 +40,7 @@ services:
       - ADVERTISED_LISTENERS=INTERNAL://kafka-broker-4:9092
       - LOGS_DIR=/kafka_logs
   kafka-broker-5:
-    image: 'memoriaio/kafka-docker:19.0.3'
+    image: 'memoriaio/kafka-docker:20.0.0'
     environment:
       - NODE_ID=5
       - CONFIG_TMPL=/default_tmpl/broker.properties
@@ -48,7 +48,7 @@ services:
       - ADVERTISED_LISTENERS=INTERNAL://kafka-broker-5:9092
       - LOGS_DIR=/kafka_logs
   kafka-broker-6:
-    image: 'memoriaio/kafka-docker:19.0.3'
+    image: 'memoriaio/kafka-docker:20.0.0'
     environment:
       - NODE_ID=6
       - CONFIG_TMPL=/default_tmpl/broker.properties
